@@ -1,0 +1,416 @@
+version: '3'
+services:
+
+  server:
+    image: 'server_fl_alt'
+    container_name: fl_server_alt
+    ports:
+      - 9999:9999
+    networks:
+      - flower
+    environment:
+      - SERVER_IP=0.0.0.0:9999
+      - NUM_CLIENTS=8
+      - NUM_ROUNDS=50
+      - ALGORITHM=None
+      - POC=0
+      - SOLUTION_NAME=EUROSAT_None
+      - DATASET=EUROSAT
+      - MODEL=CNN
+    volumes:
+      - ./logs:/app/logs
+      - ./Server/early_stopping_federated.py:/app/early_stopping_federated.py  # Monta o arquivo localmente
+      - ./Server/server.py:/app/server.py  # Monta o arquivo localmente
+    working_dir: /app
+    command: ["python", "-u", "server.py"]
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+      placement:
+        constraints:
+          - node.role==manager
+
+  client-0:
+    image: 'client_fl_alt'
+    container_name: client_0
+    networks:
+      - flower
+    environment:
+      - SERVER_IP=server:9999
+      - CLIENT_ID=0
+      - NUM_CLIENTS=8
+      - MODEL=CNN
+      - CLIENT_SELECTION=False
+      - LOCAL_EPOCHS=4
+      - SOLUTION_NAME=EUROSAT_None
+      - ALGORITHM=None
+      - DATASET=EUROSAT
+      - POC=0
+      - TRANSMISSION_THRESHOLD=0.2
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TF_GPU_ALLOCATOR=cuda_malloc_async
+      - TF_IGNORE_MAX_NUMA_NODE=1
+      - TFDS_DATA_DIR=/datasets
+    volumes:
+      - ./logs:/app/logs
+      - ./Client/client.py:/app/client.py  # Monta o arquivo localmente
+      - ./Client/dataset_utils.py:/app/dataset_utils.py  # Monta o arquivo localmente
+      - ./Client/model_definition.py:/app/model_definition.py  # Monta o arquivo localmente
+      - ./Client/tf_config.py:/app/tf_config.py  # Monta o arquivo localmente
+      - ./models:/models
+      - ./datasets:/datasets
+      - ./cache:/cache
+      - ./stats:/app/stats
+    working_dir: /app
+    command: ["python", "-u", "client.py"]
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.50"
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+      placement:
+        constraints:
+          - node.role==worker
+
+  client-1:
+    image: 'client_fl_alt'
+    container_name: client_1
+    networks:
+      - flower
+    environment:
+      - SERVER_IP=server:9999
+      - CLIENT_ID=1
+      - NUM_CLIENTS=8
+      - MODEL=CNN
+      - CLIENT_SELECTION=False
+      - LOCAL_EPOCHS=4
+      - SOLUTION_NAME=EUROSAT_None
+      - ALGORITHM=None
+      - DATASET=EUROSAT
+      - POC=0
+      - TRANSMISSION_THRESHOLD=0.2
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TF_GPU_ALLOCATOR=cuda_malloc_async
+      - TF_IGNORE_MAX_NUMA_NODE=1
+      - TFDS_DATA_DIR=/datasets
+    volumes:
+      - ./logs:/app/logs
+      - ./Client/client.py:/app/client.py  # Monta o arquivo localmente
+      - ./Client/dataset_utils.py:/app/dataset_utils.py  # Monta o arquivo localmente
+      - ./Client/model_definition.py:/app/model_definition.py  # Monta o arquivo localmente
+      - ./Client/tf_config.py:/app/tf_config.py  # Monta o arquivo localmente
+      - ./models:/models
+      - ./datasets:/datasets
+      - ./cache:/cache
+      - ./stats:/app/stats
+    working_dir: /app
+    command: ["python", "-u", "client.py"]
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.55"
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+      placement:
+        constraints:
+          - node.role==worker
+  
+  client-2:
+    image: 'client_fl_alt'
+    container_name: client_2
+    networks:
+      - flower
+    environment:
+      - SERVER_IP=server:9999
+      - CLIENT_ID=2
+      - NUM_CLIENTS=8
+      - MODEL=CNN
+      - CLIENT_SELECTION=False
+      - LOCAL_EPOCHS=4
+      - SOLUTION_NAME=EUROSAT_None
+      - ALGORITHM=None
+      - DATASET=EUROSAT
+      - POC=0
+      - TRANSMISSION_THRESHOLD=0.2
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TF_GPU_ALLOCATOR=cuda_malloc_async
+      - TF_IGNORE_MAX_NUMA_NODE=1
+      - TFDS_DATA_DIR=/datasets
+    volumes:
+      - ./logs:/app/logs
+      - ./Client/client.py:/app/client.py  # Monta o arquivo localmente
+      - ./Client/dataset_utils.py:/app/dataset_utils.py  # Monta o arquivo localmente
+      - ./Client/model_definition.py:/app/model_definition.py  # Monta o arquivo localmente
+      - ./Client/tf_config.py:/app/tf_config.py  # Monta o arquivo localmente
+      - ./models:/models
+      - ./datasets:/datasets
+      - ./cache:/cache
+      - ./stats:/app/stats
+    working_dir: /app
+    command: ["python", "-u", "client.py"]
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.60"
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+      placement:
+        constraints:
+          - node.role==worker
+
+  client-3:
+    image: 'client_fl_alt'
+    container_name: client_3
+    networks:
+      - flower
+    environment:
+      - SERVER_IP=server:9999
+      - CLIENT_ID=3
+      - NUM_CLIENTS=8
+      - MODEL=CNN
+      - CLIENT_SELECTION=False
+      - LOCAL_EPOCHS=4
+      - SOLUTION_NAME=EUROSAT_None
+      - ALGORITHM=None
+      - DATASET=EUROSAT
+      - POC=0
+      - TRANSMISSION_THRESHOLD=0.2
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TF_GPU_ALLOCATOR=cuda_malloc_async
+      - TF_IGNORE_MAX_NUMA_NODE=1
+      - TFDS_DATA_DIR=/datasets
+    volumes:
+      - ./logs:/app/logs
+      - ./Client/client.py:/app/client.py  # Monta o arquivo localmente
+      - ./Client/dataset_utils.py:/app/dataset_utils.py  # Monta o arquivo localmente
+      - ./Client/model_definition.py:/app/model_definition.py  # Monta o arquivo localmente
+      - ./Client/tf_config.py:/app/tf_config.py  # Monta o arquivo localmente
+      - ./models:/models
+      - ./datasets:/datasets
+      - ./cache:/cache
+      - ./stats:/app/stats
+    working_dir: /app
+    command: ["python", "-u", "client.py"]
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.65"
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+      placement:
+        constraints:
+          - node.role==worker
+
+  client-4:
+    image: 'client_fl_alt'
+    container_name: client_4
+    networks:
+      - flower
+    environment:
+      - SERVER_IP=server:9999
+      - CLIENT_ID=4
+      - NUM_CLIENTS=8
+      - MODEL=CNN
+      - CLIENT_SELECTION=False
+      - LOCAL_EPOCHS=4
+      - SOLUTION_NAME=EUROSAT_None
+      - ALGORITHM=None
+      - DATASET=EUROSAT
+      - POC=0
+      - TRANSMISSION_THRESHOLD=0.2
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TF_GPU_ALLOCATOR=cuda_malloc_async
+      - TF_IGNORE_MAX_NUMA_NODE=1
+      - TFDS_DATA_DIR=/datasets
+    volumes:
+      - ./logs:/app/logs
+      - ./Client/client.py:/app/client.py  # Monta o arquivo localmente
+      - ./Client/dataset_utils.py:/app/dataset_utils.py  # Monta o arquivo localmente
+      - ./Client/model_definition.py:/app/model_definition.py  # Monta o arquivo localmente
+      - ./Client/tf_config.py:/app/tf_config.py  # Monta o arquivo localmente
+      - ./models:/models
+      - ./datasets:/datasets
+      - ./cache:/cache
+      - ./stats:/app/stats
+    working_dir: /app
+    command: ["python", "-u", "client.py"]
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.70"
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+      placement:
+        constraints:
+          - node.role==worker
+  
+  client-5:
+    image: 'client_fl_alt'
+    container_name: client_5
+    networks:
+      - flower
+    environment:
+      - SERVER_IP=server:9999
+      - CLIENT_ID=5
+      - NUM_CLIENTS=8
+      - MODEL=CNN
+      - CLIENT_SELECTION=False
+      - LOCAL_EPOCHS=4
+      - SOLUTION_NAME=EUROSAT_None
+      - ALGORITHM=None
+      - DATASET=EUROSAT
+      - POC=0
+      - TRANSMISSION_THRESHOLD=0.2
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TF_GPU_ALLOCATOR=cuda_malloc_async
+      - TF_IGNORE_MAX_NUMA_NODE=1
+      - TFDS_DATA_DIR=/datasets
+    volumes:
+      - ./logs:/app/logs
+      - ./Client/client.py:/app/client.py  # Monta o arquivo localmente
+      - ./Client/dataset_utils.py:/app/dataset_utils.py  # Monta o arquivo localmente
+      - ./Client/model_definition.py:/app/model_definition.py  # Monta o arquivo localmente
+      - ./Client/tf_config.py:/app/tf_config.py  # Monta o arquivo localmente
+      - ./models:/models
+      - ./datasets:/datasets
+      - ./cache:/cache
+      - ./stats:/app/stats
+    working_dir: /app
+    command: ["python", "-u", "client.py"]
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.75"
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+      placement:
+        constraints:
+          - node.role==worker
+
+  client-6:
+    image: 'client_fl_alt'
+    container_name: client_6
+    networks:
+      - flower
+    environment:
+      - SERVER_IP=server:9999
+      - CLIENT_ID=6
+      - NUM_CLIENTS=8
+      - MODEL=CNN
+      - CLIENT_SELECTION=False
+      - LOCAL_EPOCHS=4
+      - SOLUTION_NAME=EUROSAT_None
+      - ALGORITHM=None
+      - DATASET=EUROSAT
+      - POC=0
+      - TRANSMISSION_THRESHOLD=0.2
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TF_GPU_ALLOCATOR=cuda_malloc_async
+      - TF_IGNORE_MAX_NUMA_NODE=1
+      - TFDS_DATA_DIR=/datasets
+    volumes:
+      - ./logs:/app/logs
+      - ./Client/client.py:/app/client.py  # Monta o arquivo localmente
+      - ./Client/dataset_utils.py:/app/dataset_utils.py  # Monta o arquivo localmente
+      - ./Client/model_definition.py:/app/model_definition.py  # Monta o arquivo localmente
+      - ./Client/tf_config.py:/app/tf_config.py  # Monta o arquivo localmente
+      - ./models:/models
+      - ./datasets:/datasets
+      - ./cache:/cache
+      - ./stats:/app/stats
+    working_dir: /app
+    command: ["python", "-u", "client.py"]
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.80"
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+      placement:
+        constraints:
+          - node.role==worker
+
+  client-7:
+    image: 'client_fl_alt'
+    container_name: client_7
+    networks:
+      - flower
+    environment:
+      - SERVER_IP=server:9999
+      - CLIENT_ID=7
+      - NUM_CLIENTS=8
+      - MODEL=CNN
+      - CLIENT_SELECTION=False
+      - LOCAL_EPOCHS=4
+      - SOLUTION_NAME=EUROSAT_None
+      - ALGORITHM=None
+      - DATASET=EUROSAT
+      - POC=0
+      - TRANSMISSION_THRESHOLD=0.2
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TF_GPU_ALLOCATOR=cuda_malloc_async
+      - TF_IGNORE_MAX_NUMA_NODE=1
+      - TFDS_DATA_DIR=/datasets
+    volumes:
+      - ./logs:/app/logs
+      - ./Client/client.py:/app/client.py  # Monta o arquivo localmente
+      - ./Client/dataset_utils.py:/app/dataset_utils.py  # Monta o arquivo localmente
+      - ./Client/model_definition.py:/app/model_definition.py  # Monta o arquivo localmente
+      - ./Client/tf_config.py:/app/tf_config.py  # Monta o arquivo localmente
+      - ./models:/models
+      - ./datasets:/datasets
+      - ./cache:/cache
+      - ./stats:/app/stats
+    working_dir: /app
+    command: ["python", "-u", "client.py"]
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.85"
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+      placement:
+        constraints:
+          - node.role==worker
+
+networks:
+  flower:
+    driver: bridge
